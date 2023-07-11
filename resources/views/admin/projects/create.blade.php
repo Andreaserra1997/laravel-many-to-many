@@ -57,6 +57,23 @@
             @enderror
         </div>
 
+        <h3>Tecnologie</h3>
+        <div class="mb-3 d-flex">
+            @foreach ($technologies as $technology)
+                <div class="mb-3 form-check mx-2">
+                    <input 
+                        type="checkbox" 
+                        class="form-check-input" 
+                        id="technology{{ $technology->id }}" 
+                        name="technologies[]" 
+                        value="{{ $technology->id }}"
+                        @if (in_array($technology->id, old('technologies', []))) checked @endif
+                    >
+                    <label class="form-check-label" for="technology{{ $technology->id }}">{{ $technology->name }}</label>
+                </div>
+            @endforeach
+        </div>
+
         <div class="mb-3">
             <label for="date" class="form-label">Data</label>
             <input

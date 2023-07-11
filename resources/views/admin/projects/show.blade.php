@@ -6,6 +6,7 @@
     <h2>Cliente: {{ $project->client_name }}</h2>
     <h2>Data: {{ $project->date }}</h2>
     <h2>Categoria: {{ $project->type->name }}</h2>
+    <h3>Tecnologie: {{ implode(', ', $project->technologies->pluck('name')->all()) }}</h3>
     <img src="{{ $project->cover_image }}" alt="{{ $project->name }}">
     <p>{{ $project->summary }}</p>
 

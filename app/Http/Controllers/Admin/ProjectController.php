@@ -4,27 +4,30 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
     private $validations = [
-        'name'          => 'required|string|min:5|max:50',
-        'client_name'   => 'required|string|min:3|max:30',
-        'type_id'       => 'required|integer|exists:types,id', 
-        'date'          => 'required|date', 
-        'cover_image'   => 'required|url|max:200', 
-        'summary'       => 'required|string',
+        'name'              => 'required|string|min:5|max:50',
+        'client_name'       => 'required|string|min:3|max:30',
+        'type_id'           => 'required|integer|exists:types,id', 
+        'date'              => 'required|date', 
+        'cover_image'       => 'required|url|max:200', 
+        'summary'           => 'required|string',
+        'technologies'      => 'nullable|array',
+        'technologies.*'    => 'integer|exists:technologies,id',
     ];
 
     private $validations_messages = [
-        'required'      => 'Il campo :attribute è obbligatorio',
-        'min'           => 'Il campo :attribute deve contenere almeno :min caratteri',
-        'max'           => 'Il campo :attribute deve contenere almeno :max caratteri',
-        'url'           => 'Il campo deve essere un url valido',
-        'date'          => 'Il campo :attribute deve essere in formato yyyy/mm/dd',
-        'exists'        => 'Valore non valido',
+        'required'          => 'Il campo :attribute è obbligatorio',
+        'min'               => 'Il campo :attribute deve contenere almeno :min caratteri',
+        'max'               => 'Il campo :attribute deve contenere almeno :max caratteri',
+        'url'               => 'Il campo deve essere un url valido',
+        'date'              => 'Il campo :attribute deve essere in formato yyyy/mm/dd',
+        'exists'            => 'Valore non valido',
     ]; 
     /**
      * Display a listing of the resource.
@@ -45,7 +48,8 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
-        return view('admin.projects.create', compact(('types')));
+        $technologies = Technology::all();
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
 
     /**
@@ -68,6 +72,8 @@ class ProjectController extends Controller
         $newProject->cover_image    = $data['cover_image'];
         $newProject->summary        = $data['summary'];
         $newProject->save();
+
+        $newProject->technologies()->sync($data['technologies'] ?? []);
 
         return to_route('admin.projects.show', ['project' => $newProject]);
     }
@@ -92,8 +98,9 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.edit', compact('project', 'types'));
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -117,6 +124,8 @@ class ProjectController extends Controller
         $project->summary        = $data['summary'];
         $project->update();
 
+        $project->technologies()->sync($data['technologies'] ?? []);
+
         return to_route('admin.projects.show', ['project' => $project]);
     }
 
@@ -128,6 +137,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->detach();
+
         $project->delete();
 
         return to_route('admin.projects.index')->with('delete_success', $project);

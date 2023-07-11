@@ -33,6 +33,7 @@
                 <th scope="col">Nome Progetto</th>
                 <th scope="col">Nome Cliente</th>
                 <th scope="col">Categoria</th>
+                <th scope="col">Tecnologie</th>
                 <th scope="col">Data</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -44,6 +45,7 @@
                     <td>{{ $project->name }}</td>
                     <td>{{ $project->client_name }}</td>
                     <td><a href="{{ route('admin.types.show', ['type' => $project->type]) }}">{{ $project->type->name }}</a></td>
+                    <td>{{ implode(', ', $project->technologies->pluck('name')->all()) }}</td>
                     <td>{{ $project->date }}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ route('admin.projects.show', ['project' => $project]) }}">View</a>
