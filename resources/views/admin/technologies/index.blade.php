@@ -2,12 +2,12 @@
 
 @section('contents')
 
-    <h1>Categoria</h1>
+    <h1>Tecnologie</h1>
 
     @if (session('delete_success'))
-        @php $type = session('delete_success') @endphp
+        @php $technology = session('delete_success') @endphp
         <div class="alert alert-danger">
-            La categoria "{{ $type->name }}" è stata eliminata
+            La tecnologia "{{ $technology->name }}" è stata eliminata
         </div>
     @endif
 
@@ -20,15 +20,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($types as $type)
+            @foreach ($technologies as $technology)
                 <tr>
-                    <th scope="row">{{ $type->id }}</th>
-                    <td>{{ $type->name }}</td>
+                    <th scope="row">{{ $technology->id }}</th>
+                    <td>{{ $technology->name }}</td>
                     <td>
-                        <a class="btn btn-primary" href="{{ route('admin.types.show', ['type' => $type]) }}">View</a>
-                        <a class="btn btn-warning" href="{{ route('admin.types.edit', ['type' => $type]) }}">Edit</a>
+                        <a class="btn btn-primary" href="{{ route('admin.technologies.show', ['technology' => $technology]) }}">View</a>
+                        <a class="btn btn-warning" href="{{ route('admin.technologies.edit', ['technology' => $technology]) }}">Edit</a>
 
-                        <button type="button" class="btn btn-danger js-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id={{ $type->id}}>
+                        <button type="button" class="btn btn-danger js-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id={{ $technology->id}}>
                             Delete
                         </button>
                     </td>
@@ -45,13 +45,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Sei sicuro di voler eliminare definitivamente il type?
+                    Sei sicuro di voler eliminare definitivamente la tecnologia?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
                     <form
                         action=""
-                        data-template="{{ route('admin.types.destroy', ['type' => '*****']) }}"
+                        data-template="{{ route('admin.technologies.destroy', ['technology' => '*****']) }}"
                         method="post"
                         class="d-inline-block"
                         id="confirm-delete"
