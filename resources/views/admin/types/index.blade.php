@@ -4,12 +4,12 @@
 
     <h1>Categoria</h1>
 
-    {{-- @if (session('delete_success'))
+    @if (session('delete_success'))
         @php $type = session('delete_success') @endphp
         <div class="alert alert-danger">
-            Il type "{{ $type->name }}" è stato eliminato
+            La categoria "{{ $type->name }}" è stata eliminata
         </div>
-    @endif --}}
+    @endif
 
     {{-- @if (session('restore_success'))
         @php $type = session('restore_success') @endphp

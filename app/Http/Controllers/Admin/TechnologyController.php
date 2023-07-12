@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Type;
+use App\Models\Technology;
 use Illuminate\Http\Request;
 
-class TypeController extends Controller
+class TechnologyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,7 @@ class TypeController extends Controller
      */
     public function index()
     {
-        $types = Type::all();
-        return view('admin.types.index', compact('types'));
+        //
     }
 
     /**
@@ -43,21 +42,21 @@ class TypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Type  $type
+     * @param  \App\Models\Technology  $technology
      * @return \Illuminate\Http\Response
      */
-    public function show(Type $type)
+    public function show(Technology $technology)
     {
-        return view('admin.types.show', compact('type'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Type  $type
+     * @param  \App\Models\Technology  $technology
      * @return \Illuminate\Http\Response
      */
-    public function edit(Type $type)
+    public function edit(Technology $technology)
     {
         //
     }
@@ -66,10 +65,10 @@ class TypeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Type  $type
+     * @param  \App\Models\Technology  $technology
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Type $type)
+    public function update(Request $request, Technology $technology)
     {
         //
     }
@@ -77,18 +76,11 @@ class TypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Type  $type
+     * @param  \App\Models\Technology  $technology
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Type $type)
+    public function destroy(Technology $technology)
     {
-        // foreach ($type->projects as $project ) {
-        //     $project->$type_id = 1;
-        //     $project->update();
-        // }
-
-        $type->delete();
-
-        return to_route('admin.types.index')->with('delete_success', $type);
+        //
     }
 }
