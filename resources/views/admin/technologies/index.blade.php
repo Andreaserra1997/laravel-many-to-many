@@ -15,7 +15,7 @@
         <thead>
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Categoria</th>
+                <th scope="col">Tecnologia</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>

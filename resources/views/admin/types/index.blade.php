@@ -2,7 +2,7 @@
 
 @section('contents')
 
-    <h1>Categoria</h1>
+    <h1>Categorie</h1>
 
     @if (session('delete_success'))
         @php $type = session('delete_success') @endphp
