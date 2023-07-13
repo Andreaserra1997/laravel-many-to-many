@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Technology;
 use App\Models\Type;
 use App\Models\Project;
+use App\Models\Technology;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -22,9 +22,13 @@ class ProjectsTableSeeder extends Seeder
         $technologies = Technology::all()->pluck('id');
 
         for($i = 0; $i < 50; $i++) {
+            $name = $faker->words(rand(2, 10), true);
+            $slug = Project::slugger($name);
+
             $project = Project::create([
             'type_id'               => $faker->randomElement($types)->id,
-            'name'                  => $faker->word(rand(5, 15), true),
+            'name'                  => $name,
+            'slug'                  => $slug,
             'client_name'           => $faker->name(),
             'date'                  => $faker->date(),
             'cover_image'           => 'https://picsum.photos/id/' . rand(1, 270) . '/500/400',

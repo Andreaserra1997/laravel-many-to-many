@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Type;
 use App\Models\Project;
 use App\Models\Technology;
-use App\Models\Type;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -15,7 +16,8 @@ class ProjectController extends Controller
         'client_name'       => 'required|string|min:3|max:30',
         'type_id'           => 'required|integer|exists:types,id', 
         'date'              => 'required|date', 
-        'cover_image'       => 'required|url|max:200', 
+        'cover_image'       => 'nullable|url', 
+        'image'             => 'nullable|image', 
         'summary'           => 'required|string',
         'technologies'      => 'nullable|array',
         'technologies.*'    => 'integer|exists:technologies,id',
@@ -64,12 +66,16 @@ class ProjectController extends Controller
 
         $data = $request->all();
 
+        $imagePath = Storage::put('uploads', $data['image']);
+
         $newProject = new Project();
         $newProject->name           = $data['name'];
+        $newProject->slug           = Project::slugger($data['name']);
         $newProject->client_name    = $data['client_name'];
         $newProject->type_id        = $data['type_id'];
         $newProject->date           = $data['date'];
         $newProject->cover_image    = $data['cover_image'];
+        $newProject->image          = $imagePath;
         $newProject->summary        = $data['summary'];
         $newProject->save();
 
@@ -84,8 +90,9 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($slug)
     {
+        $project = Project::where('slug', $slug)->firstOrFail();
         return view('admin.projects.show', compact('project'));
     }
 
@@ -95,8 +102,10 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function edit(Project $project)
+    public function edit($slug)
     {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
         $types = Type::all();
         $technologies = Technology::all();
 
@@ -110,11 +119,23 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request, $slug)
     {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
         $request->validate($this->validations, $this->validations_messages);
 
         $data = $request->all();
+
+        if($data['image']) {
+            $imagePath = Storage::put('uploads', $data['image']);
+
+            if($project->image) {
+                Storage::delete($project->image);
+            }
+
+            $project->image = $imagePath;
+        }
 
         $project->name           = $data['name'];
         $project->client_name    = $data['client_name'];
@@ -135,8 +156,14 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy($slug)
     {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        if($project->image) {
+            Storage::delete($project->image);
+        }
+        
         $project->technologies()->detach();
 
         $project->delete();
